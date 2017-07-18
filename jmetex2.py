@@ -38,21 +38,20 @@ class InterfaceCollector(object):
         ifname = junos_interface['name'][0]["data"]
         default_labels = {'instance': instance, 'interface': ifname}
 
-        print("Name: %s" % (ifname))
         if 'input-error-list' in junos_interface.keys():
             for input_error in junos_interface['input-error-list']:
                 for key in input_error.keys():
                     metric.add_sample(key.replace('-', '_'),
                                       value=int(input_error[key][0]['data']),
                                       labels=default_labels)
-                    print(key+": "+input_error[key][0]['data'])
+
         if 'output-error-list' in junos_interface.keys():
             for output_error in junos_interface['output-error-list']:
                 for key in output_error.keys():
                     metric.add_sample(key.replace('-', '_'),
                                       value=int(output_error[key][0]['data']),
                                       labels=default_labels)
-                    print(key+": "+output_error[key][0]['data'])
+
         if 'traffic-statistics' in junos_interface.keys():
             for trafstat in junos_interface['traffic-statistics']:
                 for key in trafstat.keys():
@@ -62,17 +61,15 @@ class InterfaceCollector(object):
                         metric.add_sample(key.replace('-', '_'),
                                           value=int(trafstat[key][0]['data']),
                                           labels=default_labels)
-                        print(key+": "+trafstat[key][0]['data'])
+
         if 'admin-status' in junos_interface.keys():
             admin_status = self.state_to_int(junos_interface['admin-status'][0]['data'])
             metric.add_sample('admin_status', value=admin_status, labels=default_labels)
-            print('Admin State: '+str(admin_status))
 
         if 'oper-status' in junos_interface.keys():
             oper_status = self.state_to_int(junos_interface['oper-status'][0]['data'])
             metric.add_sample('oper_status',
                               value=oper_status, labels=default_labels)
-            print('Admin State: '+str(oper_status))
 
     @REQUEST_TIME.time()
     def handle_if_statistics(self, http_session, metric):
