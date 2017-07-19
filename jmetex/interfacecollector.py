@@ -15,6 +15,7 @@ class InterfaceCollector(object):
         self.rpc_url = rpc_url
         self.user = user
         self.password = password
+        self.prefix='junos_'
 
     def start_connection(self):
         http_session = Session()
@@ -44,14 +45,14 @@ class InterfaceCollector(object):
         if 'input-error-list' in junos_interface.keys():
             for input_error in junos_interface['input-error-list']:
                 for key in input_error.keys():
-                    metric.add_sample(key.replace('-', '_'),
+                    metric.add_sample(self.prefix+key.replace('-', '_'),
                                       value=int(input_error[key][0]['data']),
                                       labels=default_labels)
 
         if 'output-error-list' in junos_interface.keys():
             for output_error in junos_interface['output-error-list']:
                 for key in output_error.keys():
-                    metric.add_sample(key.replace('-', '_'),
+                    metric.add_sample(self.prefix+key.replace('-', '_'),
                                       value=int(output_error[key][0]['data']),
                                       labels=default_labels)
 
@@ -61,17 +62,17 @@ class InterfaceCollector(object):
                     if key == 'attributes':
                         pass
                     else:
-                        metric.add_sample(key.replace('-', '_'),
+                        metric.add_sample(self.prefix+key.replace('-', '_'),
                                           value=int(trafstat[key][0]['data']),
                                           labels=default_labels)
 
         if 'admin-status' in junos_interface.keys():
             admin_status = self.state_to_int(junos_interface['admin-status'][0]['data'])
-            metric.add_sample('admin_status', value=admin_status, labels=default_labels)
+            metric.add_sample(self.prefix+'admin_status', value=admin_status, labels=default_labels)
 
         if 'oper-status' in junos_interface.keys():
             oper_status = self.state_to_int(junos_interface['oper-status'][0]['data'])
-            metric.add_sample('oper_status',
+            metric.add_sample(self.prefix+'oper_status',
                               value=oper_status, labels=default_labels)
 
     @REQUEST_TIME.time()
