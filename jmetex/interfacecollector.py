@@ -8,10 +8,13 @@ from requests import Session
 
 class InterfaceCollector(object):
 
-    REQUEST_TIME = Summary('request_processing_seconds', 'Time spent gathering junos data')
+    REQUEST_TIME = Summary('request_processing_seconds', 'Time spent gathering junos interface data')
 
-    def __init__(self):
-        pass
+    def __init__(self, instance, rpc_url, user, password):
+        self.instance = instance
+        self.rpc_url = rpc_url
+        self.user = user
+        self.password = password
 
     def start_connection(self):
         http_session = Session()
@@ -36,7 +39,7 @@ class InterfaceCollector(object):
     def parse_and_report_ifstat(self, junos_interface, metric):
         self.metric = metric
         ifname = junos_interface['name'][0]["data"]
-        default_labels = {'instance': instance, 'interface': ifname}
+        default_labels = {'instance': self.instance, 'interface': ifname}
 
         if 'input-error-list' in junos_interface.keys():
             for input_error in junos_interface['input-error-list']:
@@ -73,9 +76,9 @@ class InterfaceCollector(object):
 
     @REQUEST_TIME.time()
     def handle_if_statistics(self, http_session, metric):
-        uri = rpc_url+"get-interface-information?extensive="
+        uri = self.rpc_url+"get-interface-information?extensive="
         headers = {'Accept': 'application/json'}
-        result = http_session.get(uri, auth=(user, password), headers=headers)
+        result = http_session.get(uri, auth=(self.user, self.password), headers=headers)
         interface_json = result.json()
         self.iterate_interfaces(interface_json, metric)
 
@@ -85,13 +88,3 @@ class InterfaceCollector(object):
         self.handle_if_statistics(http_session, metric)
         yield metric
 
-if __name__ == '__main__':
-    start_http_server(int(sys.argv[1]))
-    instance = sys.argv[2]
-    rpc_url = sys.argv[3]
-    user = sys.argv[4]
-    password = sys.argv[5]
-    REGISTRY.register(InterfaceCollector())
-
-    while True:
-        time.sleep(1)
