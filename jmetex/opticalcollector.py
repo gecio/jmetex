@@ -14,7 +14,7 @@ class OpticalCollector(object):
         self.rpc_url = rpc_url
         self.user = user
         self.password = password
-        self.prefix='junos_'
+        self.prefix = 'junos_'
 
     def start_connection(self):
         http_session = Session()
@@ -34,26 +34,25 @@ class OpticalCollector(object):
         for key in if_diag:
             if key.startswith('laser') or key.startswith('rx'):
                 if key.endswith('warn') or key.endswith('alarm'):
-                    if_diag[key][0]['data']=self.state_to_int(if_diag[key][0]['data'])
+                    if_diag[key][0]['data'] = self.state_to_int(if_diag[key][0]['data'])
                 metric.add_sample(self.prefix+key.replace('-', '_'),
-                                      value=float(if_diag[key][0]['data']),
-                                      labels=default_labels)
+                                  value=float(if_diag[key][0]['data']),
+                                  labels=default_labels)
             if key.startswith('module'):
                 if 'attributes' in if_diag[key][0].keys():
                     value = if_diag[key][0]['attributes']['junos:celsius']
                     metric.add_sample(self.prefix+key.replace('-', '_'),
-                                  value=float(value),
-                                  labels=default_labels)
+                                      value=float(value),
+                                      labels=default_labels)
                 else:
                     if key.endswith('warn') or key.endswith('alarm'):
-                       if_diag[key][0]['data']=self.state_to_int(if_diag[key][0]['data']) 
+                        if_diag[key][0]['data'] = self.state_to_int(if_diag[key][0]['data'])
                     metric.add_sample(self.prefix+key.replace('-', '_'),
-                                  value=float(if_diag[key][0]['data']),
-                                  labels=default_labels)
-
+                                      value=float(if_diag[key][0]['data']),
+                                      labels=default_labels)
 
     def iterate_interfaces(self, interface_json, metric):
-        self.metric=metric
+        self.metric = metric
         json = interface_json["interface-information"][0]["physical-interface"]
         for phys_interface in json:
             self.parse_and_report_optical(phys_interface, metric)

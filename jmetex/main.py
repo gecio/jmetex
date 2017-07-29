@@ -8,16 +8,16 @@ from .opticalcollector import OpticalCollector
 def main():
 
     parser = argparse.ArgumentParser(description='JunOS API to Prometheus exporter')
-    parser.add_argument('--port', type=int, required=True, 
-                    help='listen port')
-    parser.add_argument('--instance', type=str, required=True, 
-                    help='instance name')
+    parser.add_argument('--port', type=int, required=True,
+                        help='listen port')
+    parser.add_argument('--instance', type=str, required=True,
+                        help='instance name')
     parser.add_argument('--rpc_url', type=str, required=True,
-                    help='URL of the junos RPC endpoint')
+                        help='URL of the junos RPC endpoint')
     parser.add_argument('--user', type=str, required=True,
-                    help='junos user name')
+                        help='junos user name')
     parser.add_argument('--password', type=str, required=True,
-                    help='junos password')
+                        help='junos password')
     args = parser.parse_args()
     start_http_server(args.port)
 

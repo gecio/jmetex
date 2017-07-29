@@ -15,7 +15,7 @@ class InterfaceCollector(object):
         self.rpc_url = rpc_url
         self.user = user
         self.password = password
-        self.prefix='junos_'
+        self.prefix = 'junos_'
 
     def start_connection(self):
         http_session = Session()
