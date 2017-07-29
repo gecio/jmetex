@@ -8,7 +8,7 @@ import pprint
 
 class InterfaceCollector(object):
 
-    REQUEST_TIME = Summary('request_processing_seconds', 'Time spent gathering junos interface data')
+    REQUEST_TIME = Summary('request_processing_seconds_interfaces', 'Time spent gathering junos interface data')
 
     def __init__(self, instance, rpc_url, user, password):
         self.instance = instance

@@ -3,6 +3,7 @@ import time
 import argparse
 from prometheus_client import start_http_server, Metric, REGISTRY, Summary
 from .interfacecollector import InterfaceCollector
+from .opticalcollector import OpticalCollector
 
 def main():
 
@@ -21,6 +22,7 @@ def main():
     start_http_server(args.port)
 
     REGISTRY.register(InterfaceCollector(args.instance, args.rpc_url, args.user, args.password))
+    REGISTRY.register(OpticalCollector(args.instance, args.rpc_url, args.user, args.password))
 
     while True:
         time.sleep(1)
