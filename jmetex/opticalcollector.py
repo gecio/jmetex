@@ -71,4 +71,3 @@ class OpticalCollector(object):
         http_session = self.start_connection()
         self.handle_if_statistics(http_session, metric)
         yield metric
-
