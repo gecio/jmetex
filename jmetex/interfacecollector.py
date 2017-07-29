@@ -4,7 +4,7 @@ import sys
 import time
 from prometheus_client import start_http_server, Metric, REGISTRY, Summary
 from requests import Session
-
+import pprint
 
 class InterfaceCollector(object):
 
@@ -61,6 +61,12 @@ class InterfaceCollector(object):
                 for key in trafstat.keys():
                     if key == 'attributes':
                         pass
+                    elif key == 'ipv6-transit-statistics':
+                        for v6_transit in trafstat['ipv6-transit-statistics']:
+                            for v6key in v6_transit:
+                                metric.add_sample(self.prefix+'ipv6_'+v6key.replace('-', '_'),
+                                                  value=int(trafstat[v6key][0]['data']),
+                                                  labels=default_labels)
                     else:
                         metric.add_sample(self.prefix+key.replace('-', '_'),
                                           value=int(trafstat[key][0]['data']),
