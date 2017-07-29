@@ -2,11 +2,11 @@ from setuptools import setup
 
 setup(name='jmetex',
       version='0.1',
-      description='The funniest joke in the world',
-      url='http://github.com/storborg/funniest',
-      author='Flying Circus',
-      author_email='flyingcircus@example.com',
-      license='MIT',
+      description='Junos Metering Exporter for Prometheus',
+      url='http://github.com/innovocloud/jmetex',
+      author='Tom Eichhorn',
+      author_email='tom.eichhorn@innovo-cloud.de',
+      license='Apache',
       packages=['jmetex'],
       entry_points = {
         'console_scripts': ['jmetex=jmetex.main:main'],
