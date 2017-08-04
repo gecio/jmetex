@@ -1,0 +1,17 @@
+[Unit]
+Description=jmetex for instance %i
+Documentation=file:/usr/share/doc/jmetex/README.md
+Documentation=https://github.com/innovocloud/jmetex
+After=network.target
+Requires=network.target
+ConditionPathExists=/etc/jmetex/%i.conf
+
+[Service]
+EnvironmentFile=/etc/jmetex/%i.conf
+User=nobody
+Group=nogroup
+ExecStart=/usr/bin/jmetex --port $PORT --instance $INSTANCE --rpc_url $RPC_URL --user $JUNOS_USER --password $JUNOS_PASSWORD
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
