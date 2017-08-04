@@ -1,0 +1,33 @@
+image: ubuntu:xenial
+
+before_script:
+  - source /etc/profile
+
+stages:
+  - build
+
+buildpackage:
+  stage: build
+  variables:
+    DEBIAN_FRONTEND: noninteractive
+  script:
+    - gpg -v --import <(echo "$GPG_SIGNING_KEY")
+    - apt-get -y update
+    - apt-get -y install build-essential devscripts dh-make equivs git git-buildpackage dput
+    - mk-build-deps -ri -t 'apt-get -o Debug::pkgProblemResolver=yes --no-install-recommends -y'
+    - gbp buildpackage --git-ignore-branch --git-ignore-new --git-builder='debuild -i -k"openstack-packaging@innovo-cloud.de" -sa'
+    - mv ../build-area package
+    - gbp buildpackage --git-ignore-branch --git-ignore-new --git-builder='debuild -S -k"openstack-packaging@innovo-cloud.de" -sa'
+    - mv ../build-area source
+    - dput ppa:innovo-cloud-public/jmetex source/*.changes
+  only:
+    - tags
+  except:
+    - master
+    - upstream
+  artifacts:
+    paths:
+      - package/*
+      - source/*
+  tags:
+    - debbuild

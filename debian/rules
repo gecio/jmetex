@@ -1,0 +1,11 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@ --with python3,systemd --buildsystem=pybuild
+
+override_dh_fixperms:
+	dh_fixperms
+	chmod 0600 debian/jmetex/etc/jmetex/*
+
+override_dh_installinit:
+	dh_installinit -n

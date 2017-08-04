@@ -1,0 +1,3 @@
+usr/bin/*
+contrib/systemd/jmetex@.service /lib/systemd/system/
+contrib/example.conf /etc/jmetex/
