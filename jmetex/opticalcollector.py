@@ -35,9 +35,12 @@ class OpticalCollector(object):
             if key.startswith('laser') or key.startswith('rx'):
                 if key.endswith('warn') or key.endswith('alarm'):
                     if_diag[key][0]['data'] = self.state_to_int(if_diag[key][0]['data'])
-                metric.add_sample(self.prefix+key.replace('-', '_'),
-                                  value=float(if_diag[key][0]['data']),
-                                  labels=default_labels)
+                try:
+                    metric.add_sample(self.prefix+key.replace('-', '_'),
+                                      value=float(if_diag[key][0]['data']),
+                                      labels=default_labels)
+                except:
+                    pass
             if key.startswith('module'):
                 if 'attributes' in if_diag[key][0].keys():
                     value = if_diag[key][0]['attributes']['junos:celsius']
