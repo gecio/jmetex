@@ -1,3 +1,9 @@
+jmetex (0.2) xenial; urgency=medium
+
+  * Fix for omitting infinity values in laser data
+
+ -- Tom Eichhorn <tom.eichhorn@innovo-cloud.de>  Sun, 04 Mar 2018 11:42:00 +0100
+
 jmetex (0.1) xenial; urgency=medium
 
   * initial release
